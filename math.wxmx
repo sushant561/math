@@ -1,0 +1,209 @@
+/* -------------Create and transform vectors and matrices (the transpose vector (matrix) conjugate
+transpose of a vector (matrix)) */
+
+/* Define a vector */
+v: [1,2,30];
+/* Transpose of the vector */
+vt: transpose(v);
+/* Conjugate transpose of the vector */
+v_ct: map(conjugate, v);
+
+/* Define a matrix */
+m: matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
+/* Transpose of the matrix */
+mt: transpose(m);
+/* Conjugate transpose of the matrix */
+m_ct: map(conjugate, m);
+
+
+/* --------------------------Generate the matrix into echelon form and find its rank. */
+/* Define a matrix */
+m: matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
+
+/* Compute the echelon form */
+m_echelon: echelon(m);
+
+/* Find the rank of the matrix */
+rank_m: matrix_size(m_echelon)[1];
+
+/* -----------------------------Find cofactors, determinant, adjoint and inverse of a matrix. */
+
+/* Define the matrix */
+m: matrix([1, 2, 3], [0, 1, 4], [5, 6, 0]);
+
+/* Cofactor matrix */
+cof: cofactor(m);
+
+/* Determinant */
+det_m: determinant(m);
+
+/* Adjoint (adjugate) matrix */
+adjoint_m: transpose(cofactor(m));
+
+/* Inverse */
+inverse_m: invert(m);
+
+
+
+
+/* -----------------------------Solve a system of Homogeneous and non-homogeneous equations using Gauss
+elimination method.. */
+
+/* Define the matrix A and vector B */
+A: matrix([2, 1, -1], [-3, -1, 2], [-2, 1, 2]);
+B: matrix([8], [-11], [-3]);
+
+/* Augment the matrix for non-homogeneous */
+augmented_matrix: augment(A, B);
+
+/* Perform Gauss elimination */
+echelon_homogeneous: echelon(A);
+echelon_nonhomogeneous: echelon(augmented_matrix);
+
+/* Solve the systems */
+homogeneous_solution: linsolve([2*x + y - z = 0, -3*x - y + 2*z = 0, -2*x + y + 2*z = 0], [x, y, z]);
+nonhomogeneous_solution: linsolve([2*x + y - z = 8, -3*x - y + 2*z = -11, -2*x + y + 2*z = -3], [x, y, z]);
+
+
+/* -----------------------------Solve a system of Homogeneous equations using the Gauss Jordan method. */
+
+/* Define the coefficient matrix */
+A: matrix([2, 1, -1], [-3, -1, 2], [-2, 1, 2]);
+
+/* Augment with a zero column for the homogeneous system */
+augmented_matrix: augment(A, zero_matrix(3, 1));
+
+/* Perform Gauss-Jordan elimination */
+rref: gaussjord(augmented_matrix);
+
+
+/* -----------------------------Generate basis of column space, null space, row space and left null space of a matrix
+space. */
+
+/* Define the matrix */
+A: matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
+
+/* Basis for column space */
+col_space_basis: columnspace(A);
+
+/* Basis for null space */
+null_space_basis: nullspace(A);
+
+/* Basis for row space */
+row_space_basis: rowspace(A);
+
+/* Basis for left null space */
+left_null_space_basis: nullspace(transpose(A));
+
+/* -----------------------------Generate basis of column space, null space, row space and left null space of a matrix
+space. */
+
+/* Define vectors for linear dependence check */
+V: matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
+rank_V: matrix_size(echelon(V))[1];
+if rank_V < length(V) then print("Dependent") else print("Independent");
+
+/* Linear combination of vectors */
+v1: [1, 2, 3]; v2: [4, 5, 6]; v3: [7, 8, 9];
+a: 2; b: -1; c: 3;
+linear_combination: a*v1 + b*v2 + c*v3;
+
+/* Transition matrix */
+B: matrix([1, 0, 0], [0, 1, 0], [0, 0, 1]);
+B_prime: matrix([1, 2, 1], [0, 1, -1], [1, 1, 0]);
+P_B_prime_to_B: invert(B_prime) . B;
+
+/* -----------------------------Find the orthonormal basis of a given vector space using the Gram-Schmidt
+orthogonalization process. */
+
+/* Define the matrix of vectors */
+V: matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
+
+/* Perform Gram-Schmidt orthogonalization */
+result: gramschmidt(V);
+
+/* Extract the orthonormal basis */
+orthonormal_basis: result[1];
+
+
+/* -----------------------------Check the diagonalizable property of matrices and find the corresponding eigenvalue
+and verify the Cayley- Hamilton theorem. */
+
+/* Define the matrix */
+A: matrix([2, 1], [1, 2]);
+
+/* Compute eigenvalues and eigenvectors */
+eig: eigenvectors(A);
+eigenvalues: eig[1];
+eigenvectors: eig[2];
+
+/* Check diagonalizable property */
+if length(eigenvectors) = length(A) then print("Matrix is diagonalizable")
+else print("Matrix is not diagonalizable");
+
+/* Verify Cayley-Hamilton theorem */
+char_poly: charpoly(A, lambda);
+subst_matrix: subst(lambda=A, char_poly);
+simplify(subst_matrix);
+
+
+/* -----------------------------10. Application of Linear algebra: Coding and decoding of messages using nonsingular
+matrices. eg code “Linear Algebra is fun” and then decode it. */
+
+/* Define encoding matrix */
+E: matrix([2, 3], [1, 4]);
+
+/* Inverse of encoding matrix */
+E_inv: invert(E);
+
+/* Original message in numerical form */
+message: matrix([12, 9], [14, 5], [1, 18], [0, 1], [12, 7], [2, 5], [18, 1], [9, 19], [0, 6], [21, 14]);
+
+/* Encode the message */
+encoded_message: E . message;
+
+/* Decode the message */
+decoded_message: E_inv . encoded_message;
+
+/* -----------------------------Compute Gradient of a scalar field.*/
+
+/* Define the scalar field */
+f: <your_scalar_field>;
+
+/* Compute partial derivatives */
+df_dx: diff(f, x);
+df_dy: diff(f, y);
+df_dz: diff(f, z); /* Include only if f is 3D */
+
+/* Combine into gradient vector */
+gradient_f: matrix([df_dx], [df_dy], [df_dz]); /* Adjust for 2D or 3D */
+
+/* -----------------------------Compute Divergence of a vector field..*/
+
+/* Define the vector field */
+Fx: <F_x>;  /* Component in the x-direction */
+Fy: <F_y>;  /* Component in the y-direction */
+Fz: <F_z>;  /* Component in the z-direction (optional for 3D) */
+
+/* Compute partial derivatives */
+dFx_dx: diff(Fx, x);
+dFy_dy: diff(Fy, y);
+dFz_dz: diff(Fz, z);  /* Include only if 3D */
+
+/* Sum the partial derivatives to find the divergence */
+div_F: dFx_dx + dFy_dy + dFz_dz;  /* Adjust for 2D or 3D */
+
+
+/* -----------------------------Compute Curl of a vector field.*/
+
+/* Define the vector field components */
+Fx: x^2 + y;  /* F_x component */
+Fy: y^2 + x;  /* F_y component */
+
+/* Compute the partial derivatives for curl */
+dFy_dx: diff(Fy, x);  /* ∂F_y/∂x */
+dFx_dy: diff(Fx, y);  /* ∂F_x/∂y */
+
+/* Compute the curl */
+curl: dFy_dx - dFx_dy;
+
